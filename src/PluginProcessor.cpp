@@ -90,11 +90,18 @@ void AudioPluginAudioProcessor::prepareToPlay (double sampleRate, int samplesPer
     // initialisation that you need..
     juce::ignoreUnused (sampleRate, samplesPerBlock);
 
+    juce::ADSR::Parameters adsrParams;
+    adsrParams.attack  = 4.0f;
+    adsrParams.decay   = 0.1f;
+    adsrParams.sustain = 0.8f;
+    adsrParams.release = 0.2f;
+
     juce::dsp::ProcessSpec spec;
     spec.sampleRate = sampleRate;
     spec.maximumBlockSize = samplesPerBlock;
     spec.numChannels = getTotalNumOutputChannels();
     oscillator.prepare(spec);
+    oscillator.setADSRParameters(adsrParams);
 }
 
 void AudioPluginAudioProcessor::releaseResources()
@@ -151,13 +158,6 @@ void AudioPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
     // the samples and the outer loop is handling the channels.
     // Alternatively, you can process the samples with the channels
     // interleaved by keeping the same state.
-    for (int channel = 0; channel < totalNumInputChannels; ++channel)
-    {
-        auto* channelData = buffer.getWritePointer (channel);
-        juce::ignoreUnused (channelData);
-        // ..do something to the data...
-    }
-
     keyboardState.processNextMidiBuffer(midiMessages, 0, buffer.getNumSamples(), true);
 
     for (const auto metadata : midiMessages)
@@ -169,6 +169,7 @@ void AudioPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
             currentMidiNote = message.getNoteNumber();
             double frequency = juce::MidiMessage::getMidiNoteInHertz(currentMidiNote);
             oscillator.setFrequency(frequency);
+            oscillator.noteOn(); 
         }
         else if (message.isNoteOff())
         {
@@ -176,6 +177,7 @@ void AudioPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
             {
                 currentMidiNote = -1; // No active note
                 oscillator.setFrequency(0.0f); // Stop the oscillator
+                oscillator.noteOff();
             }
         }
     }

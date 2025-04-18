@@ -13,7 +13,13 @@ public:
     void setFrequency(float frequency);              // Set the oscillator frequency
     void process(juce::dsp::AudioBlock<float>& audioBlock); // Process audio data
 
+    void noteOn();
+    void noteOff();
+    void setADSRParameters(const juce::ADSR::Parameters& params);
+
 private:
     juce::dsp::Oscillator<float> oscillator; // JUCE DSP oscillator
+    juce::ADSR adsr;
+    juce::ADSR::Parameters adsrParams;
 };
 
