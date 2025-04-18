@@ -74,3 +74,24 @@ void Oscillator::process(juce::dsp::AudioBlock<float>& audioBlock)
     for (size_t ch = 0; ch < audioBlock.getNumChannels(); ++ch)
         std::memcpy(audioBlock.getChannelPointer(ch), tempBuffer.getReadPointer(static_cast<int>(ch)), sizeof(float) * tempBuffer.getNumSamples());
 }
+
+void Oscillator::setWaveformType(WaveformType type)
+{
+    switch (type)
+    {
+        case WaveformType::Sine:
+            oscillator.initialise([](float x) { return std::sin(x); }, 128);
+            break;
+        case WaveformType::Saw:
+            oscillator.initialise([](float x) { return x / juce::MathConstants<float>::pi; }, 128);
+            break;
+        case WaveformType::Triangle:
+            oscillator.initialise([](float x) {
+                return 2.0f * std::abs(2.0f * (x / juce::MathConstants<float>::twoPi - std::floor(x / juce::MathConstants<float>::twoPi + 0.5f))) - 1.0f;
+            }, 128);
+            break;
+        case WaveformType::Square:
+            oscillator.initialise([](float x) { return x < 0.0f ? -1.0f : 1.0f; }, 128);
+            break;
+    }
+}

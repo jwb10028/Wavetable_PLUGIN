@@ -12,6 +12,11 @@ OscillatorViewComponent::OscillatorViewComponent()
     waveformSelector.setSelectedId(1);
     addAndMakeVisible(waveformSelector);
 
+    waveformSelector.onChange = [this]() {
+        if (onWaveformChanged)
+            onWaveformChanged(waveformSelector.getSelectedId());
+    };
+
     // Warp Mode Selector
     warpModeSelector.addItem("None", 1);
     warpModeSelector.addItem("FM", 2);

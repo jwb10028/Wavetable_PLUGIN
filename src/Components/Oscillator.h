@@ -6,6 +6,8 @@
 class Oscillator
 {
 public:
+    enum class WaveformType { Sine, Saw, Triangle, Square };    
+
     Oscillator();
     ~Oscillator();
 
@@ -22,8 +24,9 @@ public:
     void noteOn();
     void noteOff();
     void setADSRParameters(const juce::ADSR::Parameters& params);
+    void setWaveformType(WaveformType type);
 
-private:
+private:   
     juce::dsp::Oscillator<float> oscillator; // JUCE DSP oscillator
     juce::ADSR adsr;
     juce::ADSR::Parameters adsrParams;

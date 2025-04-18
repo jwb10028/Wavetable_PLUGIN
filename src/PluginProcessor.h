@@ -46,6 +46,7 @@ public:
     //==============================================================================
     juce::MidiKeyboardState keyboardState;
     void handleMidiMessages(const juce::MidiBuffer& midiMessages);
+    std::vector<Oscillator>& getOscillators() { return oscillators; }
 
 private:
     //==============================================================================
