@@ -31,6 +31,5 @@ private:
     OscillatorViewComponent OscillatorViewC;
 
     // Keyboard Component
-    juce::MidiKeyboardState keyboardState;
-    juce::MidiKeyboardComponent keyboardComponent { keyboardState, juce::MidiKeyboardComponent::horizontalKeyboard };
+    juce::MidiKeyboardComponent keyboardComponent { processorRef.keyboardState, juce::MidiKeyboardComponent::horizontalKeyboard };
 };

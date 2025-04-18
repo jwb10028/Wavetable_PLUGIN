@@ -158,8 +158,30 @@ void AudioPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
         // ..do something to the data...
     }
 
-    //juce::dsp::AudioBlock<float> audioBlock(buffer);
-    //oscillator.process(audioBlock);
+    keyboardState.processNextMidiBuffer(midiMessages, 0, buffer.getNumSamples(), true);
+
+    for (const auto metadata : midiMessages)
+    {
+        const auto message = metadata.getMessage();
+
+        if (message.isNoteOn())
+        {
+            currentMidiNote = message.getNoteNumber();
+            double frequency = juce::MidiMessage::getMidiNoteInHertz(currentMidiNote);
+            oscillator.setFrequency(frequency);
+        }
+        else if (message.isNoteOff())
+        {
+            if (message.getNoteNumber() == currentMidiNote)
+            {
+                currentMidiNote = -1; // No active note
+                oscillator.setFrequency(0.0f); // Stop the oscillator
+            }
+        }
+    }
+
+    juce::dsp::AudioBlock<float> audioBlock(buffer);
+    oscillator.process(audioBlock);
 }
 
 //==============================================================================
