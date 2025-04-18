@@ -14,6 +14,9 @@ AudioPluginAudioProcessorEditor::AudioPluginAudioProcessorEditor (AudioPluginAud
     constrainer.setSizeLimits(400, 225, 1920, 1080);
     
     addAndMakeVisible(resizer);
+    addAndMakeVisible(OscillatorViewA);
+
+    OscillatorViewA.setBounds(0, 0, getWidth() / 2, getHeight() / 2);
 
     setResizable(true, true);
 }
@@ -26,15 +29,19 @@ AudioPluginAudioProcessorEditor::~AudioPluginAudioProcessorEditor()
 void AudioPluginAudioProcessorEditor::paint (juce::Graphics& g)
 {
     // (Our component is opaque, so we must completely fill the background with a solid colour)
-    g.fillAll (getLookAndFeel().findColour (juce::ResizableWindow::backgroundColourId));
-
-    g.setColour (juce::Colours::white);
-    g.setFont (15.0f);
-    g.drawFittedText ("Hello World!", getLocalBounds(), juce::Justification::centred, 1);
+    g.fillAll (juce::Colours::black);
 }
 
 void AudioPluginAudioProcessorEditor::resized()
 {
     // This is generally where you'll want to lay out the positions of any
     // subcomponents in your editor..
+    auto bounds = getLocalBounds();
+    auto oscillatorBounds = OscillatorViewA.getBounds();
+
+    oscillatorBounds.setPosition(
+        juce::jlimit(0, bounds.getWidth() - oscillatorBounds.getWidth(), oscillatorBounds.getX()),
+        juce::jlimit(0, bounds.getHeight() - oscillatorBounds.getHeight(), oscillatorBounds.getY()));
+
+    OscillatorViewA.setBounds(oscillatorBounds);
 }

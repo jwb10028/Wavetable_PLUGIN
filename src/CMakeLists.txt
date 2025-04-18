@@ -19,6 +19,7 @@ juce_add_plugin(${PROJECT_NAME}
 
 target_sources(${PROJECT_NAME}
     PRIVATE
+        Views/OscillatorViewComponent.cpp
         Components/Oscillator.cpp
         PluginEditor.cpp
         PluginProcessor.cpp)

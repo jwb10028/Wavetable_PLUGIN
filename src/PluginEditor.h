@@ -1,6 +1,7 @@
 #pragma once
 
 #include "PluginProcessor.h"
+#include "Views/OscillatorViewComponent.h"
 
 //==============================================================================
 class AudioPluginAudioProcessorEditor final : public juce::AudioProcessorEditor
@@ -22,4 +23,9 @@ private:
 
     juce::ComponentBoundsConstrainer constrainer;
     juce::ResizableCornerComponent resizer { this, &constrainer };
+
+    // Oscillator Windows
+    OscillatorViewComponent OscillatorViewA;
+    OscillatorViewComponent OscillatorViewB;
+    OscillatorViewComponent OscillatorViewC;
 };
