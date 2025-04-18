@@ -15,6 +15,7 @@ AudioPluginAudioProcessorEditor::AudioPluginAudioProcessorEditor (AudioPluginAud
     
     addAndMakeVisible(resizer);
     addAndMakeVisible(OscillatorViewA);
+    addAndMakeVisible(keyboardComponent);
 
     OscillatorViewA.setBounds(0, 0, getWidth() / 2, getHeight() / 2);
 
@@ -38,6 +39,9 @@ void AudioPluginAudioProcessorEditor::resized()
     // subcomponents in your editor..
     auto bounds = getLocalBounds();
     auto oscillatorBounds = OscillatorViewA.getBounds();
+
+    auto keyboardHeight = 100;
+    keyboardComponent.setBounds(bounds.removeFromBottom(keyboardHeight));
 
     oscillatorBounds.setPosition(
         juce::jlimit(0, bounds.getWidth() - oscillatorBounds.getWidth(), oscillatorBounds.getX()),

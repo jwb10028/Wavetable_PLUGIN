@@ -2,6 +2,7 @@
 
 #include "PluginProcessor.h"
 #include "Views/OscillatorViewComponent.h"
+#include <juce_audio_utils/juce_audio_utils.h> 
 
 //==============================================================================
 class AudioPluginAudioProcessorEditor final : public juce::AudioProcessorEditor
@@ -28,4 +29,8 @@ private:
     OscillatorViewComponent OscillatorViewA;
     OscillatorViewComponent OscillatorViewB;
     OscillatorViewComponent OscillatorViewC;
+
+    // Keyboard Component
+    juce::MidiKeyboardState keyboardState;
+    juce::MidiKeyboardComponent keyboardComponent { keyboardState, juce::MidiKeyboardComponent::horizontalKeyboard };
 };
