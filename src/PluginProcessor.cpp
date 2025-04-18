@@ -213,6 +213,8 @@ juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter()
     return new AudioPluginAudioProcessor();
 }
 
+//==============================================================================
+// Plugin Custom Methods
 void AudioPluginAudioProcessor::handleMidiMessages(const juce::MidiBuffer& midiMessages)
 {
     for (const auto metadata : midiMessages)

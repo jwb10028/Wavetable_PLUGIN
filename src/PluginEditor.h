@@ -22,13 +22,13 @@ private:
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AudioPluginAudioProcessorEditor)
 
+    // Resizable Corner Component
     juce::ComponentBoundsConstrainer constrainer;
     juce::ResizableCornerComponent resizer { this, &constrainer };
 
     // Oscillator Windows
     OscillatorViewComponent OscillatorViewA;
     OscillatorViewComponent OscillatorViewB;
-    OscillatorViewComponent OscillatorViewC;
 
     // Keyboard Component
     juce::MidiKeyboardComponent keyboardComponent { processorRef.keyboardState, juce::MidiKeyboardComponent::horizontalKeyboard };
