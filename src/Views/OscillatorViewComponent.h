@@ -18,4 +18,22 @@ private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(OscillatorViewComponent)
 
     juce::ComponentDragger dragger;
+
+    // Waveform and Warp Mode Selectors
+    juce::ComboBox waveformSelector;
+    juce::ComboBox warpModeSelector;
+
+    // Frequency Controls
+    juce::Slider octaveSlider;
+    juce::Slider coarseSlider;
+    juce::Slider fineSlider;
+
+    // Level Control
+    juce::Slider levelSlider;
+
+    // Unison Controls
+    juce::Slider unisonVoicesSlider;
+    juce::Slider detuneSlider;
+    juce::Slider blendSlider;
+    juce::ToggleButton randomizePhaseButton;
 };
