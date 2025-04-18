@@ -40,6 +40,19 @@ OscillatorViewComponent::OscillatorViewComponent()
     fineSlider.setValue(0.0);
     addAndMakeVisible(fineSlider);
 
+    auto updatePitch = [this]() {
+        if (onPitchChanged)
+            onPitchChanged(
+                static_cast<int>(octaveSlider.getValue()),
+                static_cast<int>(coarseSlider.getValue()),
+                static_cast<float>(fineSlider.getValue())
+            );
+    };
+    
+    octaveSlider.onValueChange  = updatePitch;
+    coarseSlider.onValueChange  = updatePitch;
+    fineSlider.onValueChange    = updatePitch;
+
     // Level Slider
     levelSlider.setRange(0.0, 1.0, 0.01);
     levelSlider.setTextValueSuffix(" Level");

@@ -35,6 +35,12 @@ AudioPluginAudioProcessorEditor::AudioPluginAudioProcessorEditor (AudioPluginAud
             osc.setWaveformType(waveform);
     };
 
+    OscillatorViewA.onPitchChanged = [this](int octave, int semitone, float cents) {
+        for (auto& osc : processorRef.getOscillators()) {
+            osc.setPitchOffset(octave, semitone, cents);
+        }
+    };
+
     setResizable(true, true);
 }
 

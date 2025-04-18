@@ -95,3 +95,16 @@ void Oscillator::setWaveformType(WaveformType type)
             break;
     }
 }
+
+void Oscillator::setBaseFrequency(float baseFreq)
+{
+    currentBaseFreq = baseFreq;
+    oscillator.setFrequency(currentBaseFreq * currentOffsetRatio);
+}
+
+void Oscillator::setPitchOffset(int octave, int semitones, float cents)
+{
+    float semitoneTotal = static_cast<float>(octave * 12 + semitones) + (cents / 100.0f);
+    currentOffsetRatio = std::pow(2.0f, semitoneTotal / 12.0f);
+    oscillator.setFrequency(currentBaseFreq * currentOffsetRatio);
+}

@@ -24,9 +24,18 @@ public:
     void noteOn();
     void noteOff();
     void setADSRParameters(const juce::ADSR::Parameters& params);
+    
+    // ==========================================================
+    // Getters and setters
+    // ==========================================================
     void setWaveformType(WaveformType type);
+    void setBaseFrequency(float baseFreq);
+    void setPitchOffset(int octave, int semitones, float cents);
 
 private:   
+    float currentBaseFreq = 440.0f;
+    float currentOffsetRatio = 1.0f;
+
     juce::dsp::Oscillator<float> oscillator; // JUCE DSP oscillator
     juce::ADSR adsr;
     juce::ADSR::Parameters adsrParams;

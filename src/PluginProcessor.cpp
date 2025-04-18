@@ -234,7 +234,7 @@ void AudioPluginAudioProcessor::handleMidiMessages(const juce::MidiBuffer& midiM
                 }
 
                 if (!isUsed) {
-                    oscillators[i].setFrequency(frequency);
+                    oscillators[i].setBaseFrequency(frequency);
                     oscillators[i].noteOn();
                     activeNotes[noteNumber] = i;
                     break;
