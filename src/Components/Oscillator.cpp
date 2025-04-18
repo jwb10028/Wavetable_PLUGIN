@@ -10,13 +10,35 @@ Oscillator::~Oscillator()
 {
 }
 
+Oscillator::Oscillator(Oscillator&& other) noexcept
+    : oscillator([](float x) { return std::sin(x); }) // RE-INITIALIZE
+{
+    oscillator = std::move(other.oscillator);
+    adsr = std::move(other.adsr);
+    adsrParams = other.adsrParams;
+}
+
+Oscillator& Oscillator::operator=(Oscillator&& other) noexcept
+{
+    if (this != &other)
+    {
+        oscillator = std::move(other.oscillator);
+        adsr = std::move(other.adsr);
+        adsrParams = other.adsrParams;
+    }
+    return *this;
+}
+
 void Oscillator::prepare(const juce::dsp::ProcessSpec& spec)
 {
     oscillator.prepare(spec);
+    oscillator.initialise([](float x) { return std::sin(x); }); // Ensure init
+    adsr.setSampleRate(spec.sampleRate);
 }
 
 void Oscillator::setFrequency(float frequency)
 {
+    DBG("Set frequency: " << frequency);
     oscillator.setFrequency(frequency);
 }
 
@@ -26,6 +48,7 @@ void Oscillator::setADSRParameters(const juce::ADSR::Parameters& params) {
 }
 
 void Oscillator::noteOn() {
+    DBG("Note ON");
     adsr.noteOn();
 }
 

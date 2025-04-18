@@ -43,12 +43,15 @@ public:
     void getStateInformation (juce::MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
 
+    //==============================================================================
     juce::MidiKeyboardState keyboardState;
+    void handleMidiMessages(const juce::MidiBuffer& midiMessages);
 
 private:
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AudioPluginAudioProcessor)
 
-    Oscillator oscillator;
-    int currentMidiNote = -1;
+    static constexpr int maxVoices = 8;
+    std::vector<Oscillator> oscillators;
+    std::unordered_map<int, int> activeNotes;
 };

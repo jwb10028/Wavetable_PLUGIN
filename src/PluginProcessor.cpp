@@ -90,6 +90,8 @@ void AudioPluginAudioProcessor::prepareToPlay (double sampleRate, int samplesPer
     // initialisation that you need..
     juce::ignoreUnused (sampleRate, samplesPerBlock);
 
+    oscillators.resize(maxVoices);
+
     juce::ADSR::Parameters adsrParams;
     adsrParams.attack  = 4.0f;
     adsrParams.decay   = 0.1f;
@@ -100,8 +102,11 @@ void AudioPluginAudioProcessor::prepareToPlay (double sampleRate, int samplesPer
     spec.sampleRate = sampleRate;
     spec.maximumBlockSize = samplesPerBlock;
     spec.numChannels = getTotalNumOutputChannels();
-    oscillator.prepare(spec);
-    oscillator.setADSRParameters(adsrParams);
+    
+    for (auto& osc : oscillators) {
+        osc.prepare(spec);
+        osc.setADSRParameters(adsrParams);
+    }
 }
 
 void AudioPluginAudioProcessor::releaseResources()
@@ -152,38 +157,26 @@ void AudioPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
         buffer.clear (i, 0, buffer.getNumSamples());
 
-    // This is the place where you'd normally do the guts of your plugin's
-    // audio processing...
-    // Make sure to reset the state if your inner loop is processing
-    // the samples and the outer loop is handling the channels.
-    // Alternatively, you can process the samples with the channels
-    // interleaved by keeping the same state.
+
     keyboardState.processNextMidiBuffer(midiMessages, 0, buffer.getNumSamples(), true);
 
-    for (const auto metadata : midiMessages)
+    handleMidiMessages(midiMessages);
+
+    juce::dsp::AudioBlock<float> mainBlock(buffer);
+    buffer.clear(); // Start with silence
+    
+    for (auto& osc : oscillators)
     {
-        const auto message = metadata.getMessage();
-
-        if (message.isNoteOn())
-        {
-            currentMidiNote = message.getNoteNumber();
-            double frequency = juce::MidiMessage::getMidiNoteInHertz(currentMidiNote);
-            oscillator.setFrequency(frequency);
-            oscillator.noteOn(); 
-        }
-        else if (message.isNoteOff())
-        {
-            if (message.getNoteNumber() == currentMidiNote)
-            {
-                currentMidiNote = -1; // No active note
-                oscillator.setFrequency(0.0f); // Stop the oscillator
-                oscillator.noteOff();
-            }
-        }
+        juce::AudioBuffer<float> tempBuffer(buffer.getNumChannels(), buffer.getNumSamples());
+        tempBuffer.clear();
+        juce::dsp::AudioBlock<float> tempBlock(tempBuffer);
+    
+        osc.process(tempBlock);
+    
+        // Mix into output
+        for (int ch = 0; ch < buffer.getNumChannels(); ++ch)
+            buffer.addFrom(ch, 0, tempBuffer, ch, 0, buffer.getNumSamples());
     }
-
-    juce::dsp::AudioBlock<float> audioBlock(buffer);
-    oscillator.process(audioBlock);
 }
 
 //==============================================================================
@@ -219,3 +212,45 @@ juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 {
     return new AudioPluginAudioProcessor();
 }
+
+void AudioPluginAudioProcessor::handleMidiMessages(const juce::MidiBuffer& midiMessages)
+{
+    for (const auto metadata : midiMessages)
+    {
+        const auto message = metadata.getMessage();
+
+        if (message.isNoteOn()) {
+            int noteNumber = message.getNoteNumber();
+            double frequency = juce::MidiMessage::getMidiNoteInHertz(noteNumber);
+
+            // Find free oscillator
+            for (int i = 0; i < maxVoices; ++i) {
+                bool isUsed = false;
+                for (const auto& pair : activeNotes) {
+                    if (pair.second == i) {
+                        isUsed = true;
+                        break;
+                    }
+                }
+
+                if (!isUsed) {
+                    oscillators[i].setFrequency(frequency);
+                    oscillators[i].noteOn();
+                    activeNotes[noteNumber] = i;
+                    break;
+                }
+            }
+        }
+        else if (message.isNoteOff()) {
+            int noteNumber = message.getNoteNumber();
+
+            auto it = activeNotes.find(noteNumber);
+            if (it != activeNotes.end()) {
+                int voiceIndex = it->second;
+                oscillators[voiceIndex].noteOff();
+                activeNotes.erase(it);
+            }
+        }
+    }
+}
+
