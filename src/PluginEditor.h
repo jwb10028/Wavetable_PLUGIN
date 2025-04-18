@@ -19,4 +19,7 @@ private:
     AudioPluginAudioProcessor& processorRef;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AudioPluginAudioProcessorEditor)
+
+    juce::ComponentBoundsConstrainer constrainer;
+    juce::ResizableCornerComponent resizer { this, &constrainer };
 };
