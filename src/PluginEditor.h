@@ -32,4 +32,7 @@ private:
 
     // Keyboard Component
     juce::MidiKeyboardComponent keyboardComponent { processorRef.keyboardState, juce::MidiKeyboardComponent::horizontalKeyboard };
+
+    // UI Config Function
+    void configureOscillatorView(OscillatorViewComponent& currOscillator);
 };

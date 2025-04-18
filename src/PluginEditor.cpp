@@ -18,28 +18,7 @@ AudioPluginAudioProcessorEditor::AudioPluginAudioProcessorEditor (AudioPluginAud
     addAndMakeVisible(keyboardComponent);
 
     OscillatorViewA.setBounds(0, 0, getWidth() / 2, getHeight() / 2 + (getHeight() / 6));
-
-    OscillatorViewA.onWaveformChanged = [this](int id) {
-        using WT = Oscillator::WaveformType;
-        WT waveform;
-    
-        switch (id) {
-            case 1: waveform = WT::Sine; break;
-            case 2: waveform = WT::Saw; break;
-            case 3: waveform = WT::Triangle; break;
-            case 4: waveform = WT::Square; break;
-            default: return;
-        }
-    
-        for (auto& osc : processorRef.getOscillators())
-            osc.setWaveformType(waveform);
-    };
-
-    OscillatorViewA.onPitchChanged = [this](int octave, int semitone, float cents) {
-        for (auto& osc : processorRef.getOscillators()) {
-            osc.setPitchOffset(octave, semitone, cents);
-        }
-    };
+    configureOscillatorView(OscillatorViewA);
 
     setResizable(true, true);
 }
@@ -70,4 +49,30 @@ void AudioPluginAudioProcessorEditor::resized()
         juce::jlimit(0, bounds.getHeight() - oscillatorBounds.getHeight(), oscillatorBounds.getY()));
 
     OscillatorViewA.setBounds(oscillatorBounds);
+}
+
+// Oscillator Configuration Lambdas
+void AudioPluginAudioProcessorEditor::configureOscillatorView(OscillatorViewComponent& currOscillator)
+{
+    using WT = Oscillator::WaveformType;
+
+    currOscillator.onWaveformChanged = [this](int id) {
+        WT waveform;
+
+        switch (id) {
+            case 1: waveform = WT::Sine; break;
+            case 2: waveform = WT::Saw; break;
+            case 3: waveform = WT::Triangle; break;
+            case 4: waveform = WT::Square; break;
+            default: return;
+        }
+
+        for (auto& osc : processorRef.getOscillators())
+            osc.setWaveformType(waveform);
+    };
+
+    currOscillator.onPitchChanged = [this](int octave, int semitone, float cents) {
+        for (auto& osc : processorRef.getOscillators())
+            osc.setPitchOffset(octave, semitone, cents);
+    };
 }
