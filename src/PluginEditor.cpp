@@ -17,7 +17,7 @@ AudioPluginAudioProcessorEditor::AudioPluginAudioProcessorEditor (AudioPluginAud
     addAndMakeVisible(OscillatorViewA);
     addAndMakeVisible(keyboardComponent);
 
-    OscillatorViewA.setBounds(0, 0, getWidth() / 2, getHeight() / 2);
+    OscillatorViewA.setBounds(0, 0, getWidth() / 2, getHeight() / 2 + (getHeight() / 6));
 
     setResizable(true, true);
 }

@@ -31,6 +31,9 @@ private:
     // Level Control
     juce::Slider levelSlider;
 
+    // Warp Control
+    juce::Slider warpSlider;
+
     // Unison Controls
     juce::Slider unisonVoicesSlider;
     juce::Slider detuneSlider;

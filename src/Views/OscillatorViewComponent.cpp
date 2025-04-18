@@ -38,8 +38,14 @@ OscillatorViewComponent::OscillatorViewComponent()
     // Level Slider
     levelSlider.setRange(0.0, 1.0, 0.01);
     levelSlider.setTextValueSuffix(" Level");
-    levelSlider.setValue(0.5);
+    levelSlider.setValue(1.0);
     addAndMakeVisible(levelSlider);
+
+    // Warp Slider
+    warpSlider.setRange(0.0, 1.0, 0.01);
+    warpSlider.setTextValueSuffix(" Warp");
+    warpSlider.setValue(0.0);
+    addAndMakeVisible(warpSlider);
 
     // Unison Controls
     unisonVoicesSlider.setRange(1, 8, 1);
@@ -54,7 +60,7 @@ OscillatorViewComponent::OscillatorViewComponent()
 
     blendSlider.setRange(0.0, 1.0, 0.01);
     blendSlider.setTextValueSuffix(" Blend");
-    blendSlider.setValue(0.5);
+    blendSlider.setValue(0.0);
     addAndMakeVisible(blendSlider);
 
     randomizePhaseButton.setButtonText("Randomize Phase");
@@ -81,14 +87,15 @@ void OscillatorViewComponent::resized()
     waveformSelector.setBounds(area.removeFromTop(30));
     warpModeSelector.setBounds(area.removeFromTop(30));
 
-    auto freqArea = area.removeFromTop(70);
+    auto freqArea = area.removeFromTop(60);
     octaveSlider.setBounds(freqArea.removeFromLeft(freqArea.getWidth() / 3));
     coarseSlider.setBounds(freqArea.removeFromLeft(freqArea.getWidth() / 2));
     fineSlider.setBounds(freqArea);
 
+    warpSlider.setBounds(area.removeFromTop(40));
     levelSlider.setBounds(area.removeFromTop(50));
 
-    auto unisonArea = area.removeFromTop(70);
+    auto unisonArea = area.removeFromTop(60);
     unisonVoicesSlider.setBounds(unisonArea.removeFromLeft(unisonArea.getWidth() / 4));
     detuneSlider.setBounds(unisonArea.removeFromLeft(unisonArea.getWidth() / 3));
     blendSlider.setBounds(unisonArea.removeFromLeft(unisonArea.getWidth() / 2));
