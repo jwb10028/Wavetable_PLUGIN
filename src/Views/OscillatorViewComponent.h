@@ -16,7 +16,7 @@ public:
 
     std::function<void(int)> onWaveformChanged;
     std::function<void(int, int, float)> onPitchChanged;
-
+    std::function<void(float)> onLevelChanged;
 private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(OscillatorViewComponent)
 

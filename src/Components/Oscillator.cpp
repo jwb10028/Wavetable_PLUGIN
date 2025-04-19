@@ -73,6 +73,8 @@ void Oscillator::process(juce::dsp::AudioBlock<float>& audioBlock)
 
     for (size_t ch = 0; ch < audioBlock.getNumChannels(); ++ch)
         std::memcpy(audioBlock.getChannelPointer(ch), tempBuffer.getReadPointer(static_cast<int>(ch)), sizeof(float) * tempBuffer.getNumSamples());
+
+    audioBlock.multiplyBy(level);
 }
 
 void Oscillator::setWaveformType(WaveformType type)
@@ -107,4 +109,9 @@ void Oscillator::setPitchOffset(int octave, int semitones, float cents)
     float semitoneTotal = static_cast<float>(octave * 12 + semitones) + (cents / 100.0f);
     currentOffsetRatio = std::pow(2.0f, semitoneTotal / 12.0f);
     oscillator.setFrequency(currentBaseFreq * currentOffsetRatio);
+}
+
+void Oscillator::setLevel(float gain)
+{
+    level = gain;
 }

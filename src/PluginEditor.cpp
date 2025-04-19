@@ -75,4 +75,9 @@ void AudioPluginAudioProcessorEditor::configureOscillatorView(OscillatorViewComp
         for (auto& osc : processorRef.getOscillators())
             osc.setPitchOffset(octave, semitone, cents);
     };
+
+    currOscillator.onLevelChanged = [this](float level) {
+        for (auto& osc : processorRef.getOscillators())
+            osc.setLevel(level);
+    };
 }

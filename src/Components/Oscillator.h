@@ -31,13 +31,16 @@ public:
     void setWaveformType(WaveformType type);
     void setBaseFrequency(float baseFreq);
     void setPitchOffset(int octave, int semitones, float cents);
+    void setLevel(float gain);
 
 private:   
     float currentBaseFreq = 440.0f;
     float currentOffsetRatio = 1.0f;
+    float level = 1.0f;
 
     juce::dsp::Oscillator<float> oscillator; // JUCE DSP oscillator
     juce::ADSR adsr;
     juce::ADSR::Parameters adsrParams;
+    
 };
 

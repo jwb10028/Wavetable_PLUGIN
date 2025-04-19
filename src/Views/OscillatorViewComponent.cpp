@@ -59,6 +59,11 @@ OscillatorViewComponent::OscillatorViewComponent()
     levelSlider.setValue(1.0);
     addAndMakeVisible(levelSlider);
 
+    levelSlider.onValueChange = [this]() {
+        if (onLevelChanged)
+            onLevelChanged(static_cast<float>(levelSlider.getValue()));
+    };
+
     // Warp Slider
     warpSlider.setRange(0.0, 1.0, 0.01);
     warpSlider.setTextValueSuffix(" Warp");
